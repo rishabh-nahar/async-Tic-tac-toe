@@ -29,9 +29,9 @@ function Register() {
             if (response.data.statusCode === 200) {
                 setSuccessMessage("Congartulations!!! Account created")
                 setErrorMessage("")
-                sessionStorage.setItem("user",response.data.user)
-                sessionStorage.setItem("userID",response.data.user_id)
-                sessionStorage.setItem("email",response.data.email)
+                localStorage.setItem("user",response.data.user)
+                localStorage.setItem("userID",response.data.user_id)
+                localStorage.setItem("email",response.data.email)
                 window.location.href = "/"
             }
             else{

@@ -5,7 +5,7 @@ import axios from 'axios'
 import GameCard from './gameCard'
 
 function Home() {
-    const userID = sessionStorage.getItem("userID")
+    const userID = localStorage.getItem("userID")
     const [textOnButton , setTextOnButton] = useState("Start game")
     const [games, setGames] = useState()
 

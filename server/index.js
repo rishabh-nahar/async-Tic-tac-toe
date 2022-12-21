@@ -185,7 +185,8 @@ app.get('/api/findPlayer',async (req,res)=>{
           if(user){
               const usersAlreadyPlaying = await Game.findOne({
                    playerX : req.query.userID,
-                   playerO : user._id
+                   playerO : user._id,
+                   status: false,
               })
               console.log("User already playing:",usersAlreadyPlaying);
               if(usersAlreadyPlaying != null){
@@ -230,7 +231,7 @@ app.post('/api/createGame',async (req,res)=>{
           const game = await Game.create({
                playerX:toID( req.body.playerX),
                playerO: toID(req.body.playerO),
-               status: 0
+               status: false
           })
           res.json({
                status: "ok",
@@ -239,10 +240,12 @@ app.post('/api/createGame',async (req,res)=>{
                statusCode: 200,
           })
      } catch (error) {
+          console.log(error);
           res.json({
                status: "Error",
                message:"Internal Error, try again later",
                statusCode: 406,
+               error: error
           })
      }
 })
@@ -276,9 +279,10 @@ app.post("/api/updateBoard",async (req,res)=>{
      let room = req.body.room
      let newBoard = req.body.boardTwo;
      let turn = req.body.piece;
-     let winner = req.body.winner
-
+     let winner = req.body.winner 
+     
      let status = 0
+
      if(winner != "" || winner != null){
           status = 1
      }

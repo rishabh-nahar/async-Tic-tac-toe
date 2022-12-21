@@ -4,9 +4,9 @@ import "../assets/css/game_card.css"
 function GameCard(props) {
 
     function playGame(){
-        sessionStorage.setItem("gameSessionID", props.gameSession)
-        sessionStorage.setItem("rival", props.playername)
-        sessionStorage.setItem("boardArray", props.board)
+        localStorage.setItem("gameSessionID", props.gameSession)
+        localStorage.setItem("rival", props.playername)
+        localStorage.setItem("boardArray", props.board)
         window.location.href = "/game"
     }
     

@@ -26,7 +26,6 @@ const games = new Schema({
         },
         winner:{
             type: Schema.Types.ObjectId, 
-            default: ""
         }
     },
     {

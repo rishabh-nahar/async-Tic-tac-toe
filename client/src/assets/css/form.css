@@ -1,7 +1,7 @@
 .body-template{
     width: 100%;
     display: grid;
-    grid-template-rows: 72vh auto;
+    grid-template-rows: 80vh auto;
     gap: 35px;
 }
 .body-template .top{

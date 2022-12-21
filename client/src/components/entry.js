@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 function Entry() {
 
-    if(sessionStorage.getItem("user")){
+    if(localStorage.getItem("user")){
         window.location.href = "/home"
     }
 

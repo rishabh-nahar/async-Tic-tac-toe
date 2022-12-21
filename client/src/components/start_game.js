@@ -7,7 +7,7 @@ function StartGame() {
     const [errorMessage, setErrorMessage] = useState("")
     const [successMessage, setSuccessMessage] = useState("")
     const [email, setEmail] = useState("")
-    const [userID, setuserID] = useState(sessionStorage.getItem("userID"))
+    const [userID, setuserID] = useState(localStorage.getItem("userID"))
 
     function findPlayer(){
         let api = "https://async-tic-tac-toe.vercel.app/api/findPlayer"
@@ -27,7 +27,7 @@ function StartGame() {
                 else{
                     let playerX = userID;
                     let playerO = response.data.user_id
-                    api = "https://async-tic-tac-toe.vercel.app/api/createGame"
+                    api = "http://localhost:8081/api/createGame"//"https://async-tic-tac-toe.vercel.app/api/createGame"
                     payload = {
                         playerX,
                         playerO
@@ -38,8 +38,8 @@ function StartGame() {
                         if (res.data.statusCode === 200) {
                             setSuccessMessage("Playing with " + response.data.user)
                             setErrorMessage("")
-                            sessionStorage.setItem("gameSessionID", res.data.game_id)
-                            sessionStorage.setItem("rival", response.data.user)
+                            localStorage.setItem("gameSessionID", res.data.game_id)
+                            localStorage.setItem("rival", response.data.user)
                             window.location.href = "/game"
                         }
                     })

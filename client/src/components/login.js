@@ -11,7 +11,7 @@ function Login() {
     const [password, setPassword] = useState("")
 
     function userLogin(){
-        let api = "https://hungry-foal-uniform.cyclic.app/api/login"
+        let api = "https://async-tic-tac-toe.vercel.app/api/login"
         let payload = {
             username,
             password
@@ -23,9 +23,9 @@ function Login() {
             if (response.data.statusCode === 200) {
                 setSuccessMessage("Logged In successfully")
                 setErrorMessage("")
-                sessionStorage.setItem("user",response.data.user)
-                sessionStorage.setItem("userID",response.data.user_id)
-                sessionStorage.setItem("email",response.data.email)
+                localStorage.setItem("user",response.data.user)
+                localStorage.setItem("userID",response.data.user_id)
+                localStorage.setItem("email",response.data.email)
                 window.location.href = "/home"
             }
             else{
