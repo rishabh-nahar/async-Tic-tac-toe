@@ -19,5 +19,6 @@
 .all-games-container .games .no-game-found{
     padding: 24px 0;
     font-size: 64px;
-    text-align:center
+    text-align:center;
+    font-family: Bilbo !important;
 }

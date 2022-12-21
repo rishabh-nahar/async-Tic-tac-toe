@@ -8,7 +8,7 @@
     justify-content: center;
 }
 .body-container .game-text>*{
-    font-family: cursive;
+    font-family: Bilbo !important;
     display: block;
     text-align: center;
 }

@@ -13,7 +13,7 @@ function StartGame() {
         let api = "https://async-tic-tac-toe.vercel.app/api/findPlayer"
         let payload = {
             userID,
-            email
+        email
         }
         axios.get(api, {responseType: 'json',params:payload})
         .then((response) => {   
@@ -39,6 +39,7 @@ function StartGame() {
                             setSuccessMessage("Playing with " + response.data.user)
                             setErrorMessage("")
                             sessionStorage.setItem("gameSessionID", res.data.game_id)
+                            sessionStorage.setItem("rival", response.data.user)
                             window.location.href = "/game"
                         }
                     })

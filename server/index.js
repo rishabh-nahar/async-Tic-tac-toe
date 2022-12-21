@@ -25,7 +25,7 @@ mongoose.connect(process.env.MONGO_URI,(err,res)=>{
 })
 
 // API to test connection with backend - localhost:8081/test
-app.get('/test',(req,res)=>{
+app.get('/',(req,res)=>{
      res.json({'status':"connected"})
      console.log("Connected");
 })
@@ -112,46 +112,56 @@ app.post('/api/register',async (req,res)=>{
 app.get('/api/findGames',async (req,res)=>{
      // console.log("data recieved:",req.query);
      try {
-          let rivalPlayersIDs = []; let gameData = []
-          const game = await Game.find({
-               $or: [{ playerX :  req.query.userID }, {playerO :  req.query.userID }],   
-          })
-          console.log(req.query);
-          game.map((d,k)=>{ 
-               if(req.query.userID != d.playerX){
-                    rivalPlayersIDs.push(d.playerX)
-               }    
-               else{
-                    rivalPlayersIDs.push(d.playerO) 
+          let rivalPlayersIDs = []; let gameDetails = []
+          try {
+               const game = await Game.find({
+                    $or: [{ playerX :  req.query.userID }, {playerO :  req.query.userID }],   
+               })
+               console.log("Given data in findgames",req.query);
+               console.log("game found:",game);
+               if(game){
+                    game.map((d,k)=>{ 
+                         if(req.query.userID != d.playerX){
+                              rivalPlayersIDs.push(d.playerX)
+                         }    
+                         else{
+                              rivalPlayersIDs.push(d.playerO) 
+                         }
+                    })
+                    
+                    const userDetails = await User.find({
+                         _id: { 
+                              $in : rivalPlayersIDs
+                         }
+                    })
+                    // console.log("Rivals:",userDetails);
+                    gameDetails = game.map((d,k)=>{
+                         console.log("mapped data",userDetails[k]);
+                         return {
+                              rival: userDetails[k].username,
+                              playerX: game[k].playerX,
+                              playerO: game[k].playerO,
+                              status: game[k].status,
+                              boardArray: game[k].boardArray,
+                              turn: game[k].turn,
+                              timaStamp: game[k]._id.getTimestamp(),
+                              _id: game[k]._id
+                         }
+                    })
                }
-          })
-          
-          const userDetails = await User.find({
-               _id: { 
-                    $in : rivalPlayersIDs 
-               }
-          })
-          console.log("Rivals:",userDetails);
-          game.map((d,k)=>{
-               console.log(k,userDetails[k].name)
-               gameData[k] = {
-                    rival:userDetails[k].name,
-                    playerX: game[k].playerX,
-                    playerO: game[k].playerO,
-                    status: game[k].status,
-                    boardArray: game[k].boardArray,
-                    turn: game[k].turn,
-                    timaStamp: game[k]._id.getTimestamp(),
-                    _id: game[k]._id
-               }
-               // {...game[k] , rival : userDetails[k].name, timeStamp: game[k]._id.getTimestamp()}
-          })
-          console.log(gameData);
-          if (game) {
+               if (game) {
+                    res.json({
+                         status:"OK",
+                         statusCode: 200,
+                         gameData:gameDetails,
+                    })
+               }  
+          } catch (error) {
+               console.log("Error:", error);
                res.json({
-                    status:"OK",
-                    statusCode: 200,
-                    gameData:gameData,
+                    status:"Not OK",
+                    statusCode: 406,
+                    Error: error,
                })
           }
      } catch (error) {
@@ -260,6 +270,42 @@ app.get('/api/getGameDetails',async (req,res)=>{
           }
      })
 
+app.post("/api/updateBoard",async (req,res)=>{
+     let room = req.body.room
+     let newBoard = req.body.boardTwo;
+     let turn = req.body.turn;
+     let status = req.body.status;
+     console.log(newBoard);
+     try{
+          const updateBoard = await Game.updateOne({_id: room},{
+               boardArray: newBoard, 
+               turn: turn, 
+               status: status
+          },(err,docs)=>{
+               if (err) {
+                    console.log("Error updating board",err);
+                    res.json({
+                         status: "not ok",
+                         message: "Error updating board",
+                         statusCode: 406,
+                    })
+               }
+               else {
+                    console.log("Board update", docs)
+                    res.json({
+                         status: "ok",
+                         message: "Data updated",
+                         statusCode: 200,
+                         })
+               };
+          })
+     }
+     catch(err){
+          console.log("Error",err);
+     }
+
+})
+
 const server = app.listen(port,()=>{
      console.log(`Running on port ${port}`);
 })
@@ -270,23 +316,14 @@ const io = require('socket.io')(server, {
      }
 })
 
-io.on("connection",(socket)=>{
-     console.log("Connected and socket id is", socket.id);
-     socket.on("create-connection",room=>{
-          socket.join(room)
-     })
-     socket.on("next-turn",async (board,piece,room)=>{
-          try{
-               const updateBoard = await Game.updateOne({_id: room},{boardArray: board},(err,docs)=>{
-                    if (err) console.log("Error updating board",err);
-                    else console.log("Board updare", docs);
-               })
-          }
-          catch(err){
-               console.log("Error",err);
-          }
-
-          socket.to(room).emit("recieve-new-board",board,piece,room)
+// io.on("connection",(socket)=>{
+//      console.log("Connected and socket id is", socket.id);
+//      socket.on("create-connection",room=>{
+//           socket.join(room)
+//      })
+//      socket.on("next-turn",async (board,piece,room)=>{
+         
+//           socket.to(room).emit("recieve-new-board",board,piece,room)
           
-     })
-})
+//      })
+// })

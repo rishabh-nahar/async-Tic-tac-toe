@@ -32,6 +32,7 @@ function Register() {
                 sessionStorage.setItem("user",response.data.user)
                 sessionStorage.setItem("userID",response.data.user_id)
                 sessionStorage.setItem("email",response.data.email)
+                window.location.href = "/"
             }
             else{
                 setErrorMessage(response.data.message)

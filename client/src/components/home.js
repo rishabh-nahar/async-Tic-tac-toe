@@ -17,21 +17,23 @@ function Home() {
         }
         axios.get(api,{params:payload})
         .then(res=>{
-            let allGameData = res.data.gameData;
-            let test = []
-            allGameData.map((obj,key)=>{
-                console.log(Object.values(allGameData[key]));
-                test.push(Object.values(allGameData[key]))
-                return test
-            })
-            // console.log("Gamedata",typeof((allGameData)),">",allGameData,typeof(test));
-            let noOfGames = test.length
-            if(noOfGames > 0){
-                setGames(test)
-                console.log("Games Found");
-            }
-            else{
-                console.log("No Games");
+            console.log(res);
+            if(res.data.statusCode === 200){
+                let allGameData = res.data.gameData;
+                let test = []
+                test = allGameData.map(function(val,index){
+                    // console.log(Object.values(allGameData[index]));
+                    return Object.values(allGameData[index])
+                })
+                console.log("Gamedata",typeof((allGameData)),">",allGameData,typeof(test));
+                let noOfGames = test.length
+                if(noOfGames > 0){
+                    setGames(test)
+                    console.log("Games Found");
+                }
+                else{
+                    console.log("No Games");
+                }
             }
         })
     },[])
