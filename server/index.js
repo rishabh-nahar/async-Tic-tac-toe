@@ -134,6 +134,7 @@ app.get('/api/findGames',async (req,res)=>{
                               $in : rivalPlayersIDs
                          }
                     })
+
                     // console.log("Rivals:",userDetails);
                     gameDetails = game.map((d,k)=>{
                          console.log("mapped data",userDetails[k]);
@@ -228,7 +229,8 @@ app.post('/api/createGame',async (req,res)=>{
      try {     
           const game = await Game.create({
                playerX:toID( req.body.playerX),
-               playerO: toID(req.body.playerO)
+               playerO: toID(req.body.playerO),
+               status: 0
           })
           res.json({
                status: "ok",
@@ -273,13 +275,18 @@ app.get('/api/getGameDetails',async (req,res)=>{
 app.post("/api/updateBoard",async (req,res)=>{
      let room = req.body.room
      let newBoard = req.body.boardTwo;
-     let turn = req.body.turn;
-     let status = req.body.status;
-     console.log(newBoard);
+     let turn = req.body.piece;
+     let winner = req.body.winner
+
+     let status = 0
+     if(winner != "" || winner != null){
+          status = 1
+     }
      try{
           const updateBoard = await Game.updateOne({_id: room},{
                boardArray: newBoard, 
                turn: turn, 
+               winner: winner,
                status: status
           },(err,docs)=>{
                if (err) {

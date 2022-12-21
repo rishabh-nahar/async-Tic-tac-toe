@@ -12,12 +12,13 @@ import SquareBlocks from './square_blocks'
 
 function GamePlay() {
     const [piece, setPiece] = useState("X")
-    const [pieceImgSrc, setPieceImgSrc] = useState(X)
     const [board, setBoard] = useState(["","","","","","","","",""])
     const [boardTwo, setBoardTwo] = useState(["","","","","","","","",""])
     const [bttnText, setBttnText] = useState("Submit")
     const [Submit, isSubmitted] = useState(false)
     const [player, setPlayer] = useState("")
+    const [moveDesc, setMoveDesc] = useState("")
+    const [rivalID, setRivalID] = useState("")
 
     const submitBttnRef = useRef()
 
@@ -31,8 +32,8 @@ function GamePlay() {
     //     setBoardTwo(newBoard)
     //     setBoard(newBoard)
     // })
-    const changeTurn = () => {setPiece(piece=>piece===("X"?"O":(piece ==="O"?"X":"O"))); return piece}
     useEffect(()=>{
+        console.log("Game start...");
         submitBttnRef.current.disabled = true
         let api = "https://async-tic-tac-toe.vercel.app/api/getGameDetails"
         let payload = {
@@ -41,13 +42,15 @@ function GamePlay() {
         axios.get(api, {responseType: 'json',params:payload})
         .then((response) => {
             let gameData = response.data.gameData
-            console.log(gameData);
+            console.log("game details:",gameData);
             //this code Set your piece
             if(userID === gameData.playerX){
                 setPlayer("X")
+                setRivalID(gameData.playerO)
             }
             else{
                 setPlayer("O")
+                setRivalID(gameData.playerX)
             }
             setBoardTwo(gameData.boardArray)
             setBoard(gameData.boardArray)
@@ -56,46 +59,95 @@ function GamePlay() {
             console.log("piece&player", piece,player);
 
         })
-        
-    },[])
+    },[piece,player])
+
     useEffect(()=>{
-        if(player === piece){
+        if(player == piece){
+            setMoveDesc("Your Move")
             setBttnText("Submit")
         }
         else{
+            setMoveDesc("Their Move")
             setBttnText(`Waiting for ${rival}`) 
         }
     },[piece,player])
 
+
     useEffect(()=>{
-        setBoard(boardTwo);
-        isSubmitted(false)
-        // setPiece(piece => "X" ? "O" : "X")
+        if(Submit === true){
+            console.log("Checking winner");
+            let winner = checkWin()
+            console.log("Winner:",winner);
+            console.log("Updating board in DB...");
+            console.log("payload:", payload);
+            setBoard(boardTwo);
+            let api = "http://localhost:8081/api/updateBoard"
+            let payload = {
+                room,
+                boardTwo,
+                piece,
+                winner
+            }
+            axios.post(api, payload)
+            .then((response) => {   
+                if(response.data.statusCode === 200){
+                    setBttnText(`Waiting for ${rival}`)
+                    submitBttnRef.current.disabled = true
+                    console.log(response);
+                }
+            })
+            isSubmitted(false)
+        }
         // socket.emit("next-turn",board,piece,room)
     },[Submit])
-
+    
+    const changeTurn = () => {
+        console.log("Piece before", piece);
+        setPiece(piece=>piece==="X"?"O":"X"); 
+        console.log("Piece now", piece);
+    }
 
     function submitBoard(){
-        console.log("piece changed",changeTurn())
-        let api = "https://async-tic-tac-toe.vercel.app/api/updateBoard"
-        let payload = {
-            room,
-            boardTwo,
-            piece
-        }
-        axios.post(api, payload)
-        .then((response) => {   
-            console.log(response);
-            if(response.data.statusCode === 200){
-                setBttnText(`Waiting for ${rival}`)
-                submitBttnRef.current.disabled = true
-            }
-        })
+        console.log("Submitting board");
+        console.log("Piece toggled");
+        changeTurn()
         isSubmitted(true)
+    }
+    
+    function checkWin(){
+        console.log("Checking winner");
+        const winningPattern = [
+            [0,1,2],[3,4,5],[6,7,8],
+            [0,3,6],[1,4,7],[2,5,8],
+            [0,4,8],[3,4,6]
+        ]
+        let winner = "";
+        console.log(winningPattern.length);
+        for (let i = 0; i < winningPattern.length; i++) {
+            console.log("check",i,":",board[winningPattern[i][0]],board[winningPattern[i][1]],board[winningPattern[i][2]]);
+            if(board[winningPattern[i][0]] === "X" && board[winningPattern[i][1]] === "X" && board[winningPattern[i][2]] === "X"){
+                console.log("X win");
+                winner = "X"
+            }
+            else if(board[winningPattern[i][0]] === "O" && board[winningPattern[i][1]] === "O" && board[winningPattern[i][2]] === "O"){
+                console.log("O win");
+                winner = "O"
+            }
+        }
+        if(winner !== ""){
+            if(winner === player){
+                winner = userID
+            }
+            else{
+                winner = rivalID
+            }
+        }
+        return winner
     }
     
     function putPiece(index){   
         if(piece === player){
+            console.log(`clicked on board with index ${index}`);
             if(boardTwo[index] === "" || boardTwo[index] === null){
                 let newBoard = []
                     setBoardTwo(board)
@@ -108,9 +160,11 @@ function GamePlay() {
                         }
                     })
                     setBoardTwo(newBoard)
+                    console.log("Enabled button");
                     submitBttnRef.current.disabled = false
             }   
             else{
+                console.log("Disabled button");
                 submitBttnRef.current.disabled = true
             }
         }
@@ -144,7 +198,7 @@ function GamePlay() {
                     </div>
                     <div>
                         <div className='Move-desc'>
-                            Your move
+                            {moveDesc}
                         </div>
                         <div className='main-game-conatiner'>
                             <div onClick={e=>{putPiece(0)}} className='input-blocks border-top-none border-left-none r1-c1'>{displayPiece(boardTwo[0])}</div>

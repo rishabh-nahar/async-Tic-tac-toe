@@ -16,13 +16,17 @@ const games = new Schema({
             default:"X"
         },
         status:{
-            type: String,
+            type: Boolean,
             require: true,
-            default:"Start game"
+            default: 0
         },
         boardArray:{
             type: Array,
             default: ["","","","","","","","",""]
+        },
+        winner:{
+            type: Schema.Types.ObjectId, 
+            default: ""
         }
     },
     {
