@@ -85,20 +85,26 @@ function GamePlay() {
     }
 
     function getMovesCount(){
-        console.log("board:",board.findIndex( ()=>{return ""} ))
+        // console.log("board:",board.findIndex( ()=>{return ""} ))
+        let gameTie = false
         for (let i = 0; i < board.length; i++) {
             if(board[i] === ""){
+                gameTie = false
                 break;
             }
             else{
-                setMoveDesc("It's a draw")
-                setWin(moveDesc)
-                setBttnText("Start new game")
-                submitBttnRef.current.disabled = false;
-                setGameState(false)
+                gameTie = true
             }
         }
+        if(gameTie){
+            setMoveDesc("It's a draw")
+            setWin(moveDesc)
+            setBttnText("Start new game")
+            submitBttnRef.current.disabled = false;
+            setGameState(false)
+        }
     }
+
     useEffect(()=>{
         if(player !== piece){
             setMoveDesc("Their Move")
@@ -146,7 +152,7 @@ function GamePlay() {
                 }
         }
         else if(gameState === false){
-            window.location.href = "/start"
+            // window.location.href = "/start"
             console.log(moveDesc);
         }
         getMovesCount()
@@ -190,7 +196,7 @@ function GamePlay() {
                 break;
             }
         }
-        if(winner !== ""){
+        if(winner !== "" || winner !== null){
             setGameState(false)
             if(winner === player){
                 winner = userID

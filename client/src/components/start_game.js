@@ -27,7 +27,7 @@ function StartGame() {
                 else{
                     let playerX = userID;
                     let playerO = response.data.user_id
-                    api = "http://localhost:8081/api/createGame"//"https://async-tic-tac-toe.vercel.app/api/createGame"
+                    api = "https://async-tic-tac-toe.vercel.app/api/createGame" //"http://localhost:8081/api/createGame"
                     payload = {
                         playerX,
                         playerO

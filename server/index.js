@@ -139,7 +139,7 @@ app.get('/api/findGames',async (req,res)=>{
                     gameDetails = game.map((d,k)=>{
                          console.log("mapped data",userDetails[k]);
                          return {
-                              rival: userDetails[k].username,
+                              rival: userDetails[k].name,
                               playerX: game[k].playerX,
                               playerO: game[k].playerO,
                               status: game[k].status,
