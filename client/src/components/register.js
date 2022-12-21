@@ -15,7 +15,7 @@ function Register() {
 
     // Function to send payload to database
     function regDetails(){
-        let url = "https://hungry-foal-uniform.cyclic.app/api/register"
+        let url = "https://async-tic-tac-toe.vercel.app/api/register"
         let payload = {
             name,
             username,

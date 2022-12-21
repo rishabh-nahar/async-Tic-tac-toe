@@ -11,7 +11,7 @@ function Home() {
 
     
     useEffect(()=>{
-        let api = "http://localhost:8081/api/findGames"
+        let api = "https://async-tic-tac-toe.vercel.app/api/findGames"
         let payload = {
             userID,
         }

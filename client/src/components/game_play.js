@@ -8,7 +8,7 @@ import O from "../assets/svg/o.svg"
 import io from "socket.io-client"
 import SquareBlocks from './square_blocks'
 
-const socket = io.connect("https://hungry-foal-uniform.cyclic.app/test")
+const socket = io.connect("https://async-tic-tac-toe.vercel.app/")
 
 function GamePlay() {
     const [piece, setPiece] = useState("X")
@@ -30,7 +30,7 @@ function GamePlay() {
     })
 
     useEffect(()=>{
-        let api = "http://localhost:8081/api/getGameDetails"
+        let api = "https://async-tic-tac-toe.vercel.app/api/getGameDetails"
         let payload = {
             room
         }

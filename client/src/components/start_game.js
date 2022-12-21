@@ -10,7 +10,7 @@ function StartGame() {
     const [userID, setuserID] = useState(sessionStorage.getItem("userID"))
 
     function findPlayer(){
-        let api = "http://localhost:8081/api/findPlayer"
+        let api = "https://async-tic-tac-toe.vercel.app/api/findPlayer"
         let payload = {
             userID,
             email
@@ -27,7 +27,7 @@ function StartGame() {
                 else{
                     let playerX = userID;
                     let playerO = response.data.user_id
-                    api = "http://localhost:8081/api/createGame"
+                    api = "https://async-tic-tac-toe.vercel.app/api/createGame"
                     payload = {
                         playerX,
                         playerO

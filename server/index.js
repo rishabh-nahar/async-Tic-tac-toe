@@ -8,8 +8,8 @@ const toID = mongoose.Types.ObjectId
 
 const User = require('./models/user.models')
 const Game = require('./models/games.models');
-const { Socket } = require('socket.io');
-const { aggregate } = require('./models/user.models');
+
+const port = process.env.PORT || "8081" 
 
 require('dotenv').config()
 
@@ -156,6 +156,11 @@ app.get('/api/findGames',async (req,res)=>{
           }
      } catch (error) {
           console.log("Error:", error);
+          res.json({
+               status:"Not OK",
+               statusCode: 406,
+               Error: error,
+          })
      }
 })
 
@@ -255,12 +260,11 @@ app.get('/api/getGameDetails',async (req,res)=>{
           }
      })
 
-const server = app.listen(8081,()=>{
-     console.log("Running on port 8081");
+const server = app.listen(port,()=>{
+     console.log(`Running on port ${port}`);
 })
 
-
-const io = require('socket.io')(server,{
+const io = require('socket.io')(server, {
      cors:{
           origin: "*",
      }
