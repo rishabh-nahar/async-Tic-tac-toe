@@ -1,0 +1,23 @@
+.home-body-wrapper{
+    height: 90vh;
+}
+.home-body-container{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.your-game-text{
+    font-size: 28px;
+}
+.all-games-container{
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px;
+}
+.all-games-container .games .no-game-found{
+    padding: 24px 0;
+    font-size: 64px;
+    text-align:center
+}

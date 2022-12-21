@@ -1,0 +1,28 @@
+.body-container{
+    /* height: 100vh; */
+}
+.body-container .info-container{
+    height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.body-container .game-text>*{
+    font-family: cursive;
+    display: block;
+    text-align: center;
+}
+.body-container .game-text .text-1{
+    font-size: 36px;
+}
+.body-container .game-text .text-2{
+    font-size: 96px;
+    padding: 0px 50px;
+}
+.cred-buttons{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 30px;
+}

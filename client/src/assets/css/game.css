@@ -1,0 +1,36 @@
+.main-game-conatiner{
+    display: grid;
+    grid-template-columns: repeat(3, 0fr);
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+.main-game-conatiner .input-blocks{
+    border: 5px solid #FFE79E;;
+    height: 25vw;
+    width: 25vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.cred-text .piece{
+    padding: 10px 25px;
+}
+.Move-desc{
+    text-align: center;
+    background-color:#FFE79E; ;
+    padding: 15px 0;
+}
+/* Border */
+.border-top-none{
+    border-top: none !important;
+}
+.border-bottom-none{
+    border-bottom: none !important;
+}
+.border-left-none{
+    border-left: none !important;
+}
+.border-right-none{
+    border-right: none !important;
+}

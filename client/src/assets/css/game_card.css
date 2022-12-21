@@ -1,0 +1,11 @@
+.game-card-wrapper{
+    box-shadow: 2px 4px 16px rgba(0, 0, 0, 0.25);
+    padding: 16px;
+    border-radius: 8px;
+}
+.game-card-desc{
+    padding: 16px 0;
+}
+.game-card-container .time-stamp{
+    padding: 0 0 16px 0;
+}
