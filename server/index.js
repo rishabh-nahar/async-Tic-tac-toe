@@ -112,10 +112,11 @@ app.post('/api/register',async (req,res)=>{
 app.get('/api/findGames',async (req,res)=>{
      // console.log("data recieved:",req.query);
      try {
-          let rivalPlayersIDs = []; let gameData = {}
+          let rivalPlayersIDs = []; let gameData = []
           const game = await Game.find({
                $or: [{ playerX :  req.query.userID }, {playerO :  req.query.userID }],   
           })
+          console.log(req.query);
           game.map((d,k)=>{ 
                if(req.query.userID != d.playerX){
                     rivalPlayersIDs.push(d.playerX)
@@ -133,7 +134,17 @@ app.get('/api/findGames',async (req,res)=>{
           console.log("Rivals:",userDetails);
           game.map((d,k)=>{
                console.log(k,userDetails[k].name)
-               gameData[k] = {...game[k] , rival : userDetails[k].name, timeStamp: game[k]._id.getTimestamp()}
+               gameData[k] = {
+                    rival:userDetails[k].name,
+                    playerX: game[k].playerX,
+                    playerO: game[k].playerO,
+                    status: game[k].status,
+                    boardArray: game[k].boardArray,
+                    turn: game[k].turn,
+                    timaStamp: game[k]._id.getTimestamp(),
+                    _id: game[k]._id
+               }
+               // {...game[k] , rival : userDetails[k].name, timeStamp: game[k]._id.getTimestamp()}
           })
           console.log(gameData);
           if (game) {
@@ -219,6 +230,31 @@ app.post('/api/createGame',async (req,res)=>{
      }
 })
 
+
+app.get('/api/getGameDetails',async (req,res)=>{
+     console.log(req.query);
+     try{
+          const gameDetails = await Game.findOne({
+               _id: req.query.room,   
+           })
+           if(gameDetails){
+               res.json({
+                    status: "ok",
+                    message: "Game data found",
+                    statusCode: 200,
+                    gameData: gameDetails
+                    })
+               }
+          }
+          catch(err){
+               res.json({
+                    status: "not ok",
+                    message: "Error finding game details",
+                    statusCode: 406,
+                    })
+          }
+     })
+
 const server = app.listen(8081,()=>{
      console.log("Running on port 8081");
 })
@@ -232,8 +268,21 @@ const io = require('socket.io')(server,{
 
 io.on("connection",(socket)=>{
      console.log("Connected and socket id is", socket.id);
-     socket.on("next-turn",(board,piece)=>{
-          console.log(board);
-          io.emit("recieve-new-board",board,piece)
+     socket.on("create-connection",room=>{
+          socket.join(room)
+     })
+     socket.on("next-turn",async (board,piece,room)=>{
+          try{
+               const updateBoard = await Game.updateOne({_id: room},{boardArray: board},(err,docs)=>{
+                    if (err) console.log("Error updating board",err);
+                    else console.log("Board updare", docs);
+               })
+          }
+          catch(err){
+               console.log("Error",err);
+          }
+
+          socket.to(room).emit("recieve-new-board",board,piece,room)
+          
      })
 })

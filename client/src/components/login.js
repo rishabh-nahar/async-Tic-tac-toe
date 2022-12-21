@@ -11,7 +11,7 @@ function Login() {
     const [password, setPassword] = useState("")
 
     function userLogin(){
-        let api = "http://localhost:8081/api/login"
+        let api = "https://hungry-foal-uniform.cyclic.app/test/api/login"
         let payload = {
             username,
             password

@@ -10,8 +10,6 @@ function StartGame() {
     const [userID, setuserID] = useState(sessionStorage.getItem("userID"))
 
     function findPlayer(){
-
-
         let api = "http://localhost:8081/api/findPlayer"
         let payload = {
             userID,
@@ -36,9 +34,12 @@ function StartGame() {
                     }
                     axios.post(api,payload)
                     .then(res=>{
+                        console.log(res.data);
                         if (res.data.statusCode === 200) {
                             setSuccessMessage("Playing with " + response.data.user)
                             setErrorMessage("")
+                            sessionStorage.setItem("gameSessionID", res.data.game_id)
+                            window.location.href = "/game"
                         }
                     })
                 }

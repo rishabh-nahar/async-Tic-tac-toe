@@ -13,14 +13,16 @@ const games = new Schema({
         turn:{
             type: String,
             require: true,
+            default:"X"
         },
         status:{
             type: String,
             require: true,
             default:"Start game"
         },
-        boardAray:{
-            type: Array
+        boardArray:{
+            type: Array,
+            default: ["","","","","","","","",""]
         }
     },
     {

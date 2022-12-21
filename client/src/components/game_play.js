@@ -8,7 +8,7 @@ import O from "../assets/svg/o.svg"
 import io from "socket.io-client"
 import SquareBlocks from './square_blocks'
 
-const socket = io.connect("http://localhost:8081")
+const socket = io.connect("https://hungry-foal-uniform.cyclic.app/test")
 
 function GamePlay() {
     const [piece, setPiece] = useState("X")
@@ -18,18 +18,39 @@ function GamePlay() {
     const [bttnText, setBttnText] = useState("Submit")
     const [Submit, isSubmitted] = useState(false)
 
-    socket.on("recieve-new-board",(newBoard, nextPiece)=>{
+
+    const room = sessionStorage.getItem("gameSessionID")
+    const rival = sessionStorage.getItem("rival")
+
+    socket.emit("create-connection",room)
+    socket.on("recieve-new-board",(newBoard, nextPiece,room)=>{
         setPiece(nextPiece)
         setBoardTwo(newBoard)
         setBoard(newBoard)
     })
 
     useEffect(()=>{
+        let api = "http://localhost:8081/api/getGameDetails"
+        let payload = {
+            room
+        }
+        axios.get(api, {responseType: 'json',params:payload})
+        .then((response) => {   
+            // success and error message
+            console.log(response);
+            setBoard(response.data.gameData.boardArray)
+        })
+    },[])
+
+    useEffect(()=>{
         setBoard(boardTwo);
         isSubmitted(false)
         setPiece(piece => "X" ? "O" : "X")
-        socket.emit("next-turn",board,piece)
+        sessionStorage.setItem("boardArray",board)
+        socket.emit("next-turn",board,piece,room)
     },[Submit])
+
+    console.log("Board",sessionStorage.getItem("boardArray"));
 
     function submitBoard(){
         isSubmitted(true)
@@ -59,7 +80,7 @@ function GamePlay() {
                         <Link to="/start"><img src={back} alt="back" /></Link>
                     </div>
                     <div className='cred-text'>
-                        <div className='text-2'>Game with John</div>
+                        <div className='text-2'>Game with {rival}</div>
                         <div className='text-1 weight-light'>Your piece</div>
                         <div className='piece'>
                             <img src={currentPiece} height="40" />

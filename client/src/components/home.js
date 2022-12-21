@@ -7,7 +7,7 @@ import GameCard from './gameCard'
 function Home() {
     const userID = sessionStorage.getItem("userID")
     const [textOnButton , setTextOnButton] = useState("Start game")
-    const [games, setGames] = useState({})
+    const [games, setGames] = useState()
 
     
     useEffect(()=>{
@@ -17,47 +17,49 @@ function Home() {
         }
         axios.get(api,{params:payload})
         .then(res=>{
-            console.log(res);
-            let noOfGames = Object.keys(res.data.gameData).length
-            console.log(noOfGames);
+            let allGameData = res.data.gameData;
+            let test = []
+            allGameData.map((obj,key)=>{
+                console.log(Object.values(allGameData[key]));
+                test.push(Object.values(allGameData[key]))
+                return test
+            })
+            // console.log("Gamedata",typeof((allGameData)),">",allGameData,typeof(test));
+            let noOfGames = test.length
             if(noOfGames > 0){
-                console.log("game Found");
-                setGames(res.data.gameData)
-                console.log(games);
+                setGames(test)
+                console.log("Games Found");
             }
             else{
                 console.log("No Games");
             }
         })
     },[])
+    console.log(games);
 
     function formatTimestamp(getTimestamp){
-        function toTimestamp(strDate){
-            var datum = Date.parse(strDate);
-            return datum/1000;
-         }
         return (getTimestamp)
     }
 
     function addGameCard(){
         let row = []
         for (let i = 0; i < games.length; i++) {
-            row.push(<GameCard key={games[i]._doc._id} playername={games[i].rival} update="" status={games[i]._doc.status} timeStamp={formatTimestamp(games[i].timeStamp)} />)
+            row.push(<GameCard playername={games[i][0]} status={games[i][3]} board={games[i][4]}  turn={games[i][5]} timeStamp={games[i][6]}  gameSession={games[i][7]} key={games[i][7]}  />)
         }
         return row
     }
 
     return (
-        <>
+        <>  
             <div className='home-body-wrapper'>
                 <div className='home-body-container'>
                     <div className='your-game-text weight-bold'>
                         Your Games
                     </div>
                     <div className='all-games-container'>
-                        {(games.length > 0?
+                        {(games?
                            <>
-                           {addGameCard()}
+                            {addGameCard()} 
                            </>
                             :
                             <>

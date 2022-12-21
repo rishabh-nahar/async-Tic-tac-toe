@@ -15,7 +15,7 @@ function Register() {
 
     // Function to send payload to database
     function regDetails(){
-        let url = "http://localhost:8081/api/register"
+        let url = "https://hungry-foal-uniform.cyclic.app/test/api/register"
         let payload = {
             name,
             username,
