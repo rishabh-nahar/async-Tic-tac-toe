@@ -124,7 +124,7 @@ app.get('/api/findGames',async (req,res)=>{
                if(game){
                     game.map((d,k)=>{ 
                          if(req.query.userID != d.playerX){
-                              console.log("push",d.playerX);
+                              console.log("rival X", d.playerX);
                               rivalPlayersIDs.push(d.playerX)
                               if(d.winner === ''){
                                    if(d.turn === "O"){ // when player is O
@@ -137,6 +137,7 @@ app.get('/api/findGames',async (req,res)=>{
                                    }
                               }
                               else{
+                                   console.log("winner",d.winner);
                                    if(d.winner === "X"){
                                         gameStatus.push("They won")
                                         gameTurn.push(" ")
@@ -152,7 +153,7 @@ app.get('/api/findGames',async (req,res)=>{
                               }
                          }    
                          else{
-                              console.log(d.playerO);
+                              console.log("Rival O:",d.playerO);
                               rivalPlayersIDs.push(d.playerO) 
                               if(d.winner === ''){
                                    if(d.turn === "X"){ //when player is X
@@ -165,12 +166,13 @@ app.get('/api/findGames',async (req,res)=>{
                                    }
                               }
                               else{
+                                   console.log("winner",d.winner);
                                    if(d.winner === "X"){
-                                        gameStatus.push("They won")
+                                        gameStatus.push("You Won")
                                         gameTurn.push(" ")
                                    }
                                    else if(d.winner === "O"){
-                                        gameStatus.push("You Won")
+                                        gameStatus.push("They won")
                                         gameTurn.push(" ")
                                    }
                                    else if(d.winner === "T"){
@@ -181,6 +183,7 @@ app.get('/api/findGames',async (req,res)=>{
                          }
                     })
                     console.log("Rivals array",rivalPlayersIDs);
+                    console.log("game status:", gameStatus);
                     for (let i = 0; i < rivalPlayersIDs.length; i++) {
                          let rivalDetails = await User.findOne({
                               _id: rivalPlayersIDs[i]

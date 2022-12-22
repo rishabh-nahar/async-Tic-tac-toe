@@ -39,8 +39,8 @@ function App() {
 
   return (
     <div className="App">
-      {/* <PageRoutes /> */}
-      {(deviceIsMobile ? <PageRoutes />: <DeviceError />)}
+      <PageRoutes />
+      {/* {(deviceIsMobile ? <PageRoutes />: <DeviceError />)} */}
     </div>
   );
 }
