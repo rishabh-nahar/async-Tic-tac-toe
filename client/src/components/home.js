@@ -14,7 +14,6 @@ function Home() {
         setInterval(()=>{
             findGames()
         },3000)
-        return setGameFoundtext("No Games Found")
     },[])
     function findGames(){
         let api =    "https://async-tic-tac-toe.vercel.app/api/findGames"  // "http://localhost:8081/api/findGames" //
@@ -39,6 +38,7 @@ function Home() {
                 }
                 else{
                     console.log("No Games");
+                    setGameFoundtext("No Games Found")
                 }
                 }
         })
