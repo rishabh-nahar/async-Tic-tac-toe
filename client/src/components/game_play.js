@@ -68,6 +68,10 @@ function GamePlay() {
         .then((response) => {
             gameData = response.data.gameData
             console.log("game details:",gameData);
+            if(gameData.winner !== "" || gameData.winner !==null){
+                setWinner(gameData.winner)
+                setWin(win)
+            }
             if(userID === gameData.playerX){
                 setPlayer("X")
                 setRivalID(gameData.playerO)
@@ -157,24 +161,23 @@ function GamePlay() {
     useEffect(()=>{
         if (winner) {
             setPiece(player)
+            setMoveDesc(win)
             if(winner !== "T"){
                 if(player === winner){
                     console.log("you win");
-                    setMoveDesc("You win")
-                    setWin(localStorage.getItem("name"))
+                    setWin("You win")
                 }
                 else{
                     console.log("they win");
-                    setMoveDesc(rival+" Wins")
-                    setWin(rival)
+                    setWin(rival+" Wins")
                 }
             }
             else{
                 console.log("It's a draw");
+                setWin("It's a draw")
             }
             console.log("The Winner:", winner);
             console.log("Storing results in db ....");
-
             console.log(winner, gameState);
             let api =     "https://async-tic-tac-toe.vercel.app/api/updateBoard" // "http://localhost:8081/api/updateBoard" //
             let payload = {
@@ -194,9 +197,9 @@ function GamePlay() {
         }
     },[winner])
     useEffect(()=>{
-            setBttnText("Start new game")
-            submitBttnRef.current.disabled = false;
-            console.log("Game Completed");
+        setBttnText("Start new game")
+        submitBttnRef.current.disabled = false;
+        console.log("Game Completed");
     },[gameState])
     useEffect(()=>{
         console.log("Submit and stop");
