@@ -20,7 +20,7 @@ function GamePlay() {
     const [moveDesc, setMoveDesc] = useState("")
     const [rivalID, setRivalID] = useState("")
     const [win, setWin] = useState("")
-    const [winner, setWinner] = useState(null)
+    const [winner, setWinner] = useState()
     const [gameState, setGameState] = useState(true)
     const [getGameDetailsInterval, setGetGameDetailsInterval] = useState()
 
@@ -68,10 +68,7 @@ function GamePlay() {
         .then((response) => {
             gameData = response.data.gameData
             console.log("game details:",gameData);
-            if(gameData.winner !== "" || gameData.winner !==null){
-                setWinner(gameData.winner)
-                setWin(win)
-            }
+
             if(userID === gameData.playerX){
                 setPlayer("X")
                 setRivalID(gameData.playerO)
@@ -80,6 +77,7 @@ function GamePlay() {
                 setPlayer("O")
                 setRivalID(gameData.playerX)
             }
+      
             let boardArray = gameData.boardArray
             let intialBoardArray = [];
             boardArray.map((d,k)=>{
@@ -88,6 +86,16 @@ function GamePlay() {
             setBoardTwo(intialBoardArray)
             setBoard(intialBoardArray)
             setPiece(gameData.turn)
+
+            if(gameData.winner !== "" || gameData.winner !==null){
+                console.log("Already winner:", gameData.winner);
+                checkWin();
+                console.log("winner",winner);
+                if(winner === null ){
+                    checkTie()
+                }
+            }
+
             console.log("piece and player", piece,player);
             }
         )
@@ -159,9 +167,9 @@ function GamePlay() {
     }
    
     useEffect(()=>{
+        console.log("winner state changed");
         if (winner) {
             setPiece(player)
-            setMoveDesc(win)
             if(winner !== "T"){
                 if(player === winner){
                     console.log("you win");
@@ -197,10 +205,12 @@ function GamePlay() {
         }
     },[winner])
     useEffect(()=>{
+        setMoveDesc(win)
         setBttnText("Start new game")
         submitBttnRef.current.disabled = false;
         console.log("Game Completed");
     },[gameState])
+
     useEffect(()=>{
         console.log("Submit and stop");
         if(gameState === false && Submitted === true){
@@ -217,16 +227,17 @@ function GamePlay() {
         for (let i = 0; i < winningPattern.length; i++) {
             console.log("check",i,":",board[winningPattern[i][0]],board[winningPattern[i][1]],board[winningPattern[i][2]]);
             if(board[winningPattern[i][0]] === "X" && board[winningPattern[i][1]] === "X" && board[winningPattern[i][2]] === "X"){
-                console.log("X win");
                 setWinner("X")
+                console.log("X win");
                 break;
             }
             else if(board[winningPattern[i][0]] === "O" && board[winningPattern[i][1]] === "O" && board[winningPattern[i][2]] === "O"){
-                console.log("O win");
                 setWinner("O")
+                console.log("O win");
                 break;
             }
         }
+        console.log("checkwin result:", winner);
     }
     function checkTie(){
         console.log("checking tie...");
