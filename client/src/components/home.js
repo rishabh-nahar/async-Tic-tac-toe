@@ -41,6 +41,9 @@ function Home() {
                     setGameFoundtext("No Games Found")
                 }
                 }
+                else{
+                    setGameFoundtext("No Games Found")
+                }
         })
     }
 
