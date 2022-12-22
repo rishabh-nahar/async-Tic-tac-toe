@@ -20,8 +20,9 @@ function GamePlay() {
     const [moveDesc, setMoveDesc] = useState("")
     const [rivalID, setRivalID] = useState("")
     const [win, setWin] = useState("")
-    const [winner, setWinner] = useState("")
+    const [winner, setWinner] = useState()
     const [gameState, setGameState] = useState(true)
+    const [getGameDetailsInterval, setGetGameDetailsInterval] = useState()
 
     const submitBttnRef = useRef()
 
@@ -29,25 +30,22 @@ function GamePlay() {
     const room = localStorage.getItem("gameSessionID")
     const rival = localStorage.getItem("rival")
 
-    let refreshBoardInterval;
-
-    //getGameDetails()
-    //putPiece
-    //checkwin
-    //submitBoard
-
     useEffect(()=>{
         console.log("Getting game details");
         getGameDetails()
     },[])
     
     useEffect(()=>{
+        let getGameDetilsTimeInterval;
         console.log("check win");
         checkWin()
+        if(!winner){
+            checkTie()
+        }
         if(piece !== player){
-            refreshBoardInterval = setInterval(()=>{
-                getGameDetails()
-            },2000)
+            getGameDetilsTimeInterval = setInterval(()=>{
+                    getGameDetails()
+                },2500)
             console.log("after piece changed... opponent turn");
             setMoveDesc("Their move")
             submitBttnRef.current.disabled = true
@@ -57,7 +55,8 @@ function GamePlay() {
             submitBttnRef.current.disabled = false
             setBttnText("Submit")
         }
-        return ()=>{clearInterval(refreshBoardInterval)}
+        return ()=>{clearInterval(getGameDetilsTimeInterval)}
+
     },[piece, player])
     function getGameDetails(){
         let gameData;
@@ -77,18 +76,26 @@ function GamePlay() {
                 setPlayer("O")
                 setRivalID(gameData.playerX)
             }
-            setBoardTwo(gameData.boardArray)
-            setBoard(gameData.boardArray)
+            let boardArray = gameData.boardArray
+            let intialBoardArray = [];
+            boardArray.map((d,k)=>{
+                return intialBoardArray.push(d)
+            })
+            setBoardTwo(intialBoardArray)
+            setBoard(intialBoardArray)
             setPiece(gameData.turn)
             console.log("piece and player", piece,player);
             }
         )
         console.log("You are:", player );
-        return gameData
     }
     function putPiece(index){
         if(piece === player){
             checkWin()
+            console.log("Winner:",winner);
+            if(!winner){
+                checkTie()
+            }
             console.log(`clicked on board with index ${index}`);
             if(boardTwo[index] === "" || boardTwo[index] === null){
                 let newBoard = []
@@ -124,15 +131,9 @@ function GamePlay() {
             console.log("Piece now", piece);
             isSubmitted(true)
     }
-    
-    useEffect(()=>{
-        if(Submitted === true){
-            sendBoarddataToServer();
-            isSubmitted(false)
-        }
-    },[Submitted])
-    function sendBoarddataToServer(){
-        let api =    "https://async-tic-tac-toe.vercel.app/api/updateBoard" // "http://localhost:8081/api/updateBoard" //
+    function submitOnWin(){
+        console.log(winner, gameState);
+        let api =     "https://async-tic-tac-toe.vercel.app/api/updateBoard" // "http://localhost:8081/api/updateBoard" //
         let payload = {
             room,
             boardTwo,
@@ -143,16 +144,38 @@ function GamePlay() {
         axios.post(api, payload)
         .then((response) => {   
             if(response.data.statusCode === 200){
+                console.log("Sent winning result: ",response);
+            }
+        })
+        console.log("Submit on win");
+    }
+    useEffect(()=>{
+        if(Submitted === true){
+            sendBoarddataToServer();
+            isSubmitted(false)
+        }
+    },[Submitted])
+    function sendBoarddataToServer(){
+        console.log("Saving results in db ...");
+        let api =     "https://async-tic-tac-toe.vercel.app/api/updateBoard" // "http://localhost:8081/api/updateBoard" //
+        let payload = {
+            room,
+            boardTwo,
+            piece,
+            winner
+        }
+        axios.post(api, payload)
+        .then((response) => {   
+            if(response.data.statusCode === 200){
                 console.log("game update: ",response);
             }
         })
     }
     function checkWin(){
-        console.log("Checking win");
         const winningPattern = [
             [0,1,2],[3,4,5],[6,7,8],
             [0,3,6],[1,4,7],[2,5,8],
-            [0,4,8],[3,4,6]
+            [0,4,8],[2,4,6]
         ];
         for (let i = 0; i < winningPattern.length; i++) {
             console.log("check",i,":",board[winningPattern[i][0]],board[winningPattern[i][1]],board[winningPattern[i][2]]);
@@ -169,23 +192,44 @@ function GamePlay() {
         }
     }
     useEffect(()=>{
-        if(player === piece){
-            setMoveDesc("You win")
-            setWin(localStorage.getItem("name"))
+        if (winner) {
+            if(winner !== "T"){
+                if(player === winner){
+                    setMoveDesc("You win")
+                    setWin(localStorage.getItem("name"))
+                }
+                else{
+                    setMoveDesc(rival+" Wins")
+                    setWin(rival)
+                }
+            }
+            console.log("The Winner:", winner);
+            console.log("Storing results in db ....");
+            setGameState(false)
         }
-        else{
-            setMoveDesc(rival+" wins")
-            setWin(rival)
-        }
-        setBttnText("Start new game")
-        submitBttnRef.current.disabled = false;
-        setGameState(false)
     },[winner])
 
+    useEffect(()=>{
+            submitOnWin()
+            setBttnText("Start new game")
+            submitBttnRef.current.disabled = false;
+            console.log("Game Completed");
+    },[gameState])
+
     function checkTie(){
-        console.log("checking tie");
+        console.log("checking tie...");
+        tie = true
+        for (let index = 0; index < board.length; index++) {
+            console.log("Check if any piece",board[index]);
+            if(board[index] !== "X" && board[index] !=="O"){
+                console.log("Found blank piece");
+                tie = false
+                break;
+            }
+        }
+        tie?setWinner(tie):""
     }
- 
+
     return (
     <>
         <div className='body-wrapper'>

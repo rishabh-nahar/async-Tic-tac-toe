@@ -26,6 +26,7 @@ const games = new Schema({
         },
         winner:{
             type: String,
+            default: ""
         }
     },
     {

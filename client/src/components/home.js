@@ -13,10 +13,10 @@ function Home() {
     useEffect(()=>{
         setInterval(()=>{
             findGames()
-        },5000)
+        },3000)
     },[])
     function findGames(){
-        let api =   "https://async-tic-tac-toe.vercel.app/api/findGames"  // "http://localhost:8081/api/findGames" //
+        let api =    "http://localhost:8081/api/findGames" //"https://async-tic-tac-toe.vercel.app/api/findGames"  //
         let payload = {
             userID,
         }

@@ -8,6 +8,7 @@ const toID = mongoose.Types.ObjectId
 
 const User = require('./models/user.models')
 const Game = require('./models/games.models');
+const { log } = require('console');
 
 const port = process.env.PORT || "8081" 
 
@@ -123,23 +124,55 @@ app.get('/api/findGames',async (req,res)=>{
                     game.map((d,k)=>{ 
                          if(req.query.userID != d.playerX){
                               rivalPlayersIDs.push(d.playerX)
-                              if(d.turn === "O"){ // when player is O
-                                   gameStatus.push("They just made their move")
-                                   gameTurn.push("It's your turn now to play")
+                              if(d.winner === ''){
+                                   if(d.turn === "O"){ // when player is O
+                                        gameStatus.push("They made their move")
+                                        gameTurn.push("It's your turn now to play")
+                                   }
+                                   else{
+                                        gameStatus.push("You've made move")
+                                        gameTurn.push("Waiting for them")
+                                   }
                               }
                               else{
-                                   gameStatus.push("You've made move")
-                                   gameTurn.push("Waiting for them")
+                                   if(d.winner === "X"){
+                                        gameStatus.push("They won")
+                                        gameTurn.push(" ")
+                                   }
+                                   else if(d.winner === "O"){
+                                        gameStatus.push("You Won")
+                                        gameTurn.push(" ")
+                                   }
+                                   else if(d.winner === "T"){
+                                        gameStatus.push("It's a draw")
+                                        gameTurn.push(" ")
+                                   }
                               }
                          }    
                          else{
-                              if(d.turn === "X"){ //when player is X
-                                   gameStatus.push("They made their move")
-                                   gameTurn.push("It's your turn now to play")
+                              if(d.winner === ''){
+                                   if(d.turn === "X"){ //when player is X
+                                        gameStatus.push("They made their move")
+                                        gameTurn.push("It's your turn now to play")
+                                   }
+                                   else{
+                                        gameStatus.push("You've made move")
+                                        gameTurn.push("Waiting for them")
+                                   }
                               }
                               else{
-                                   gameStatus.push("You've made move")
-                                   gameTurn.push("Waiting for them")
+                                   if(d.winner === "X"){
+                                        gameStatus.push("They won")
+                                        gameTurn.push(" ")
+                                   }
+                                   else if(d.winner === "O"){
+                                        gameStatus.push("You Won")
+                                        gameTurn.push(" ")
+                                   }
+                                   else if(d.winner === "T"){
+                                        gameStatus.push("It's a draw")
+                                        gameTurn.push(" ")
+                                   }
                               }
                               rivalPlayersIDs.push(d.playerO) 
                          }
