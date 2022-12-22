@@ -218,7 +218,7 @@ function GamePlay() {
 
     function checkTie(){
         console.log("checking tie...");
-        tie = true
+        let tie = true
         for (let index = 0; index < board.length; index++) {
             console.log("Check if any piece",board[index]);
             if(board[index] !== "X" && board[index] !=="O"){
@@ -227,7 +227,9 @@ function GamePlay() {
                 break;
             }
         }
-        tie?setWinner(tie):""
+        if(tie){
+            setWinner("T")
+        }
     }
 
     return (
