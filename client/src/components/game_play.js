@@ -20,7 +20,7 @@ function GamePlay() {
     const [moveDesc, setMoveDesc] = useState("")
     const [rivalID, setRivalID] = useState("")
     const [win, setWin] = useState("")
-    const [winner, setWinner] = useState()
+    const [winner, setWinner] = useState(null)
     const [gameState, setGameState] = useState(true)
     const [getGameDetailsInterval, setGetGameDetailsInterval] = useState()
 
@@ -39,7 +39,7 @@ function GamePlay() {
         let getGameDetilsTimeInterval;
         console.log("check win");
         checkWin()
-        if(!winner){
+        if(winner === null){
             checkTie()
         }
         if(piece !== player){
@@ -93,7 +93,7 @@ function GamePlay() {
         if(piece === player){
             checkWin()
             console.log("Winner:",winner);
-            if(!winner){
+            if(winner === null){
                 checkTie()
             }
             console.log(`clicked on board with index ${index}`);
@@ -131,24 +131,6 @@ function GamePlay() {
             console.log("Piece now", piece);
             isSubmitted(true)
     }
-    function submitOnWin(){
-        console.log(winner, gameState);
-        let api =     "https://async-tic-tac-toe.vercel.app/api/updateBoard" // "http://localhost:8081/api/updateBoard" //
-        let payload = {
-            room,
-            boardTwo,
-            piece,
-            winner
-        }
-        console.log("payload:", payload);
-        axios.post(api, payload)
-        .then((response) => {   
-            if(response.data.statusCode === 200){
-                console.log("Sent winning result: ",response);
-            }
-        })
-        console.log("Submit on win");
-    }
     useEffect(()=>{
         if(Submitted === true){
             sendBoarddataToServer();
@@ -171,6 +153,58 @@ function GamePlay() {
             }
         })
     }
+   
+    useEffect(()=>{
+        if (winner) {
+            setPiece(player)
+            if(winner !== "T"){
+                if(player === winner){
+                    console.log("you win");
+                    setMoveDesc("You win")
+                    setWin(localStorage.getItem("name"))
+                }
+                else{
+                    console.log("they win");
+                    setMoveDesc(rival+" Wins")
+                    setWin(rival)
+                }
+            }
+            else{
+                console.log("It's a draw");
+            }
+            console.log("The Winner:", winner);
+            console.log("Storing results in db ....");
+
+            console.log(winner, gameState);
+            let api =     "https://async-tic-tac-toe.vercel.app/api/updateBoard" // "http://localhost:8081/api/updateBoard" //
+            let payload = {
+                room,
+                boardTwo,
+                piece,
+                winner
+            }
+            console.log("payload:", payload);
+            axios.post(api, payload)
+            .then((response) => {   
+                if(response.data.statusCode === 200){
+                    console.log("Sent winning result: ",response);
+                }
+            })
+            setGameState(false)
+        }
+    },[winner])
+    useEffect(()=>{
+            setBttnText("Start new game")
+            submitBttnRef.current.disabled = false;
+            console.log("Game Completed");
+    },[gameState])
+    useEffect(()=>{
+        console.log("Submit and stop");
+        if(gameState === false && Submitted === true){
+            window.location.href = "/start"
+        }
+    },[Submitted, gameState])
+
     function checkWin(){
         const winningPattern = [
             [0,1,2],[3,4,5],[6,7,8],
@@ -191,34 +225,9 @@ function GamePlay() {
             }
         }
     }
-    useEffect(()=>{
-        if (winner) {
-            if(winner !== "T"){
-                if(player === winner){
-                    setMoveDesc("You win")
-                    setWin(localStorage.getItem("name"))
-                }
-                else{
-                    setMoveDesc(rival+" Wins")
-                    setWin(rival)
-                }
-            }
-            console.log("The Winner:", winner);
-            console.log("Storing results in db ....");
-            setGameState(false)
-        }
-    },[winner])
-
-    useEffect(()=>{
-            submitOnWin()
-            setBttnText("Start new game")
-            submitBttnRef.current.disabled = false;
-            console.log("Game Completed");
-    },[gameState])
-
     function checkTie(){
         console.log("checking tie...");
-        let tie = true
+        var tie = true
         for (let index = 0; index < board.length; index++) {
             console.log("Check if any piece",board[index]);
             if(board[index] !== "X" && board[index] !=="O"){
