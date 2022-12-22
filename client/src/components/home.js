@@ -8,12 +8,13 @@ function Home() {
     const userID = localStorage.getItem("userID")
     const [textOnButton , setTextOnButton] = useState("Start game")
     const [games, setGames] = useState()
-
+    const [gameFoundtext, setGameFoundtext] = useState("Loading...")
     
     useEffect(()=>{
         setInterval(()=>{
             findGames()
         },3000)
+        return setGameFoundtext("No Games Found")
     },[])
     function findGames(){
         let api =    "https://async-tic-tac-toe.vercel.app/api/findGames"  // "http://localhost:8081/api/findGames" //
@@ -81,7 +82,7 @@ function Home() {
                             :
                             <>
                                 <div className='games'>
-                                    <div className='no-game-found cursive'>No Games Found</div>
+                                    <div className='no-game-found cursive'>{gameFoundtext}</div>
                                 </div>
                                 <div className='button-container'>
                                     <Link  to="/start"><button className='bttn-1'>{textOnButton}</button></Link>
