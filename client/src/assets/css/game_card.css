@@ -5,7 +5,10 @@
 }
 .game-card-desc{
     padding: 16px 0;
+    line-height: 18px;
+    font-size:14px
 }
 .game-card-container .time-stamp{
     padding: 0 0 16px 0;
+    font-size: 12px;
 }

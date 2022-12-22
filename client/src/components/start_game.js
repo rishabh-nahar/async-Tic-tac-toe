@@ -13,7 +13,7 @@ function StartGame() {
         let api = "https://async-tic-tac-toe.vercel.app/api/findPlayer"
         let payload = {
             userID,
-        email
+            email
         }
         axios.get(api, {responseType: 'json',params:payload})
         .then((response) => {   
@@ -30,7 +30,7 @@ function StartGame() {
                     api = "https://async-tic-tac-toe.vercel.app/api/createGame" //"http://localhost:8081/api/createGame"
                     payload = {
                         playerX,
-                        playerO
+                        playerO,
                     }
                     axios.post(api,payload)
                     .then(res=>{

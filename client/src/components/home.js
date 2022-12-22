@@ -11,7 +11,12 @@ function Home() {
 
     
     useEffect(()=>{
-        let api = "http://localhost:8081/api/findGames" // "https://async-tic-tac-toe.vercel.app/api/findGames"
+        setInterval(()=>{
+            findGames()
+        },5000)
+    },[])
+    function findGames(){
+        let api =   "https://async-tic-tac-toe.vercel.app/api/findGames"  // "http://localhost:8081/api/findGames" //
         let payload = {
             userID,
         }
@@ -34,19 +39,29 @@ function Home() {
                 else{
                     console.log("No Games");
                 }
-            }
+                }
         })
-    },[])
-    console.log(games);
+    }
 
     function formatTimestamp(getTimestamp){
-        return (getTimestamp)
+
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May","June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
+
+        let timeStampArray = getTimestamp.split("T")
+        let time = timeStampArray[1].split(".")[0]
+        let dateArray = timeStampArray[0].split("-")
+        let year = dateArray[0];
+        let month = monthNames[dateArray[1]-1]
+        let day = dateArray[2]
+
+        let newTimeStamp = day + " " + month + " " + year + ", " + time
+        return (newTimeStamp)
     }
 
     function addGameCard(){
         let row = []
         for (let i = 0; i < games.length; i++) {
-            row.push(<GameCard playername={games[i][0]} status={games[i][3]} board={games[i][4]}  turn={games[i][5]} timeStamp={games[i][6]}  gameSession={games[i][7]} key={games[i][7]}  />)
+            row.push(<GameCard playername={games[i][0]} status={games[i][3]} board={games[i][4]}  turn={games[i][5]} timeStamp={formatTimestamp(games[i][6])}  gameSession={games[i][7]} key={games[i][7]}  />)
         }
         return row
     }

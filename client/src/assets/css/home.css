@@ -8,6 +8,8 @@
 }
 .your-game-text{
     font-size: 28px;
+    background-color: white;
+    padding: 0 0 24px 0;
 }
 .all-games-container{
     display: flex;

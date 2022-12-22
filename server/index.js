@@ -112,7 +112,7 @@ app.post('/api/register',async (req,res)=>{
 app.get('/api/findGames',async (req,res)=>{
      // console.log("data recieved:",req.query);
      try {
-          let rivalPlayersIDs = []; let gameDetails = []
+          let rivalPlayersIDs = [], gameDetails = [], gameStatus = [], gameTurn=[]
           try {
                const game = await Game.find({
                     $or: [{ playerX :  req.query.userID }, {playerO :  req.query.userID }],   
@@ -123,8 +123,24 @@ app.get('/api/findGames',async (req,res)=>{
                     game.map((d,k)=>{ 
                          if(req.query.userID != d.playerX){
                               rivalPlayersIDs.push(d.playerX)
+                              if(d.turn === "O"){ // when player is O
+                                   gameStatus.push("They just made their move")
+                                   gameTurn.push("It's your turn now to play")
+                              }
+                              else{
+                                   gameStatus.push("You've made move")
+                                   gameTurn.push("Waiting for them")
+                              }
                          }    
                          else{
+                              if(d.turn === "X"){ //when player is X
+                                   gameStatus.push("They made their move")
+                                   gameTurn.push("It's your turn now to play")
+                              }
+                              else{
+                                   gameStatus.push("You've made move")
+                                   gameTurn.push("Waiting for them")
+                              }
                               rivalPlayersIDs.push(d.playerO) 
                          }
                     })
@@ -134,7 +150,6 @@ app.get('/api/findGames',async (req,res)=>{
                               $in : rivalPlayersIDs
                          }
                     })
-
                     // console.log("Rivals:",userDetails);
                     gameDetails = game.map((d,k)=>{
                          console.log("mapped data",userDetails[k]);
@@ -142,9 +157,9 @@ app.get('/api/findGames',async (req,res)=>{
                               rival: userDetails[k].name,
                               playerX: game[k].playerX,
                               playerO: game[k].playerO,
-                              status: game[k].status,
+                              status: gameStatus[k],
                               boardArray: game[k].boardArray,
-                              turn: game[k].turn,
+                              turn: gameTurn[k],
                               timaStamp: game[k]._id.getTimestamp(),
                               _id: game[k]._id
                          }

@@ -24,6 +24,7 @@ function Login() {
                 setSuccessMessage("Logged In successfully")
                 setErrorMessage("")
                 localStorage.setItem("user",response.data.user)
+                localStorage.setItem("name",response.data.user)
                 localStorage.setItem("userID",response.data.user_id)
                 localStorage.setItem("email",response.data.email)
                 window.location.href = "/home"
