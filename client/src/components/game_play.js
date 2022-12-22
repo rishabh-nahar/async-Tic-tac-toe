@@ -19,7 +19,7 @@ function GamePlay() {
     const [player, setPlayer] = useState("")
     const [moveDesc, setMoveDesc] = useState("")
     const [rivalID, setRivalID] = useState("")
-    const [win, setWin] = useState("")
+    const [win, setWin] = useState()
     const [winner, setWinner] = useState()
     const [gameState, setGameState] = useState(true)
     const [getGameDetailsInterval, setGetGameDetailsInterval] = useState()
@@ -89,13 +89,9 @@ function GamePlay() {
 
             if(gameData.winner !== "" || gameData.winner !==null){
                 console.log("Already winner:", gameData.winner);
-                checkWin();
-                console.log("winner",winner);
-                if(winner === null ){
-                    checkTie()
-                }
+                setWinner(gameData.winner)
+                setWin(win)
             }
-
             console.log("piece and player", piece,player);
             }
         )
@@ -187,6 +183,7 @@ function GamePlay() {
             console.log("The Winner:", winner);
             console.log("Storing results in db ....");
             console.log(winner, gameState);
+
             let api =     "https://async-tic-tac-toe.vercel.app/api/updateBoard" // "http://localhost:8081/api/updateBoard" //
             let payload = {
                 room,

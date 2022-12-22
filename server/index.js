@@ -208,7 +208,6 @@ app.get('/api/findGames',async (req,res)=>{
                          }
                     })
                }
-
                if (game) {
                     res.json({
                          status:"OK",
