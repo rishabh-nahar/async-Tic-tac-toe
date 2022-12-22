@@ -48,12 +48,12 @@ function GamePlay() {
                 },2500)
             console.log("after piece changed... opponent turn");
             setMoveDesc("Their move")
-            submitBttnRef.current.disabled = true
             setBttnText(`Waiting for ${rival}`)  
+            submitBttnRef.current.disabled = true;
         }else{
             setMoveDesc("Your move")
-            submitBttnRef.current.disabled = false
             setBttnText("Submit")
+            submitBttnRef.current.disabled = false
         }
         return ()=>{clearInterval(getGameDetilsTimeInterval)}
 

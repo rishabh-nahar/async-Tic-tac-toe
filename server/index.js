@@ -234,7 +234,7 @@ app.get('/api/findPlayer',async (req,res)=>{
               const usersAlreadyPlaying = await Game.findOne({
                    playerX : req.query.userID,
                    playerO : user._id,
-                   status: false,
+                   winner: "",
               })
               console.log("User already playing:",usersAlreadyPlaying);
               if(usersAlreadyPlaying != null){
