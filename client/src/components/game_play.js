@@ -132,7 +132,7 @@ function GamePlay() {
         }
     },[Submitted])
     function sendBoarddataToServer(){
-        let api = "https://async-tic-tac-toe.vercel.app/api/updateBoard" // "http://localhost:8081/api/updateBoard"
+        let api =    "https://async-tic-tac-toe.vercel.app/api/updateBoard" // "http://localhost:8081/api/updateBoard" //
         let payload = {
             room,
             boardTwo,
@@ -143,7 +143,7 @@ function GamePlay() {
         axios.post(api, payload)
         .then((response) => {   
             if(response.data.statusCode === 200){
-                console.log(response);
+                console.log("game update: ",response);
             }
         })
     }
