@@ -14,7 +14,7 @@ function Home() {
             findGames()
             setInterval(()=>{
             findGames()
-        },30000)
+        },2500)
     },[])
     function findGames(){
         let api =     "http://localhost:8081/api/findGames" // "https://async-tic-tac-toe.vercel.app/api/findGames"  //
