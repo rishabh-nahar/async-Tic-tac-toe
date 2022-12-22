@@ -11,12 +11,13 @@ function Home() {
     const [gameFoundtext, setGameFoundtext] = useState("Loading...")
     
     useEffect(()=>{
-        setInterval(()=>{
             findGames()
-        },3000)
+            setInterval(()=>{
+            findGames()
+        },30000)
     },[])
     function findGames(){
-        let api =    "https://async-tic-tac-toe.vercel.app/api/findGames"  // "http://localhost:8081/api/findGames" //
+        let api =     "http://localhost:8081/api/findGames" // "https://async-tic-tac-toe.vercel.app/api/findGames"  //
         let payload = {
             userID,
         }
@@ -65,7 +66,7 @@ function Home() {
     function addGameCard(){
         let row = []
         for (let i = 0; i < games.length; i++) {
-            row.push(<GameCard playername={games[i][0]} status={games[i][3]} board={games[i][4]}  turn={games[i][5]} timeStamp={formatTimestamp(games[i][6])}  gameSession={games[i][7]} key={games[i][7]}  />)
+            row.push(<GameCard playername={games[i][0]} status={games[i][3]} board={games[i][4]}  turn={games[i][5]} timeStamp={formatTimestamp(games[i][6])}  gameSession={games[i][7]} key={games[i][7]} win={games[i][8]}  />)
         }
         return row
     }

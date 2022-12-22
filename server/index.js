@@ -113,16 +113,18 @@ app.post('/api/register',async (req,res)=>{
 app.get('/api/findGames',async (req,res)=>{
      // console.log("data recieved:",req.query);
      try {
-          let rivalPlayersIDs = [], gameDetails = [], gameStatus = [], gameTurn=[]
+          let rivalPlayersIDs = [],userDetails=[], gameDetails = [], gameStatus = [], gameTurn=[], users_name = []
           try {
                const game = await Game.find({
                     $or: [{ playerX :  req.query.userID }, {playerO :  req.query.userID }],   
                })
                console.log("Given data in findgames",req.query);
                console.log("game found:",game);
+
                if(game){
                     game.map((d,k)=>{ 
                          if(req.query.userID != d.playerX){
+                              console.log("push",d.playerX);
                               rivalPlayersIDs.push(d.playerX)
                               if(d.winner === ''){
                                    if(d.turn === "O"){ // when player is O
@@ -150,6 +152,8 @@ app.get('/api/findGames',async (req,res)=>{
                               }
                          }    
                          else{
+                              console.log(d.playerO);
+                              rivalPlayersIDs.push("push",d.playerO) 
                               if(d.winner === ''){
                                    if(d.turn === "X"){ //when player is X
                                         gameStatus.push("They made their move")
@@ -174,30 +178,37 @@ app.get('/api/findGames',async (req,res)=>{
                                         gameTurn.push(" ")
                                    }
                               }
-                              rivalPlayersIDs.push(d.playerO) 
                          }
                     })
-                    
-                    const userDetails = await User.find({
-                         _id: { 
-                              $in : rivalPlayersIDs
-                         }
-                    })
-                    // console.log("Rivals:",userDetails);
+                    console.log("Rivals array",rivalPlayersIDs);
+                    for (let i = 0; i < rivalPlayersIDs.length; i++) {
+                         let rivalDetails = await User.findOne({
+                              _id: rivalPlayersIDs[i]
+                         })
+                         userDetails.push(rivalDetails)
+                    }
+                    console.log(userDetails);
+                    console.log(game.length, userDetails.length);
+                    users_name.push(...userDetails.map((d,k)=>{
+                         return d.name
+                    }))
+                    console.log(...users_name);
                     gameDetails = game.map((d,k)=>{
-                         console.log("mapped data",userDetails[k]);
+                         console.log("mapped data",users_name[k]);
                          return {
-                              rival: userDetails[k].name,
+                              rival: users_name[k],
                               playerX: game[k].playerX,
                               playerO: game[k].playerO,
                               status: gameStatus[k],
                               boardArray: game[k].boardArray,
                               turn: gameTurn[k],
                               timaStamp: game[k]._id.getTimestamp(),
-                              _id: game[k]._id
+                              _id: game[k]._id,
+                              win: game[k].status
                          }
                     })
                }
+
                if (game) {
                     res.json({
                          status:"OK",

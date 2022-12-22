@@ -231,7 +231,7 @@ function GamePlay() {
         for (let index = 0; index < board.length; index++) {
             console.log("Check if any piece",board[index]);
             if(board[index] !== "X" && board[index] !=="O"){
-                console.log("Found blank piece");
+                console.log("Found blank piece at index",index);
                 tie = false
                 break;
             }

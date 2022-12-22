@@ -21,7 +21,7 @@ function GameCard(props) {
                     </div>
                     <div className='time-stamp'>{props.timeStamp}</div>
                     <Link>
-                        <button onClick={e=>{playGame()}} className='bttn-1'>Play!</button>
+                        <button onClick={e=>{playGame()}} className='bttn-1'>{(props.win?"View game":"Play!")}</button>
                     </Link>
                 </div>
             </div>
