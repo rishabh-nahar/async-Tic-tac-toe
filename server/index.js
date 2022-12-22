@@ -153,7 +153,7 @@ app.get('/api/findGames',async (req,res)=>{
                          }    
                          else{
                               console.log(d.playerO);
-                              rivalPlayersIDs.push("push",d.playerO) 
+                              rivalPlayersIDs.push(d.playerO) 
                               if(d.winner === ''){
                                    if(d.turn === "X"){ //when player is X
                                         gameStatus.push("They made their move")
