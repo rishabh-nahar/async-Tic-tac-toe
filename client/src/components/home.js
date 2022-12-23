@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import "../assets/css/home.css"
 import axios from 'axios'
 import GameCard from './gameCard'
+import add from "../assets/svg/add.svg"
 
 function Home() {
     const userID = localStorage.getItem("userID")
@@ -83,6 +84,14 @@ function Home() {
                         {(games?
                            <>
                             {addGameCard()} 
+
+                            <div className='new-game-bttn weight-bold'>
+                                <Link  to="/start" className='link'><button className='bttn'>
+                                    <img src={add}/> 
+                                    <div>New Game</div>
+                                    </button></Link>
+                            </div>
+
                            </>
                             :
                             <>
@@ -93,9 +102,7 @@ function Home() {
                                     <Link  to="/start"><button className='bttn-1'>{textOnButton}</button></Link>
                                 </div> 
                             </>
-                            
                             )}
-
                     </div>
                 </div>
             </div> 

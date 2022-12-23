@@ -24,3 +24,18 @@
     text-align:center;
     font-family: Bilbo !important;
 }
+.new-game-bttn .bttn{
+    padding: 12px 15px;
+    background-color: #270F36;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.new-game-bttn{
+    padding: 24px;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+}
