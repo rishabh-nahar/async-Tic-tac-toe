@@ -7,7 +7,7 @@
     ReactJS
     NodeJs
 
-To run code:
+To run code:\
     1. Clone the repository\
     2. Open client and server in any terminal\
     3. Type npm install and enter\
