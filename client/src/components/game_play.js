@@ -45,7 +45,7 @@ function GamePlay() {
         if(piece !== player){
             getGameDetilsTimeInterval = setInterval(()=>{
                     getGameDetails()
-                },2500)
+                },1500)
             console.log("after piece changed... opponent turn");
             setMoveDesc("Their move")
             setBttnText(`Waiting for ${rival}`)  
