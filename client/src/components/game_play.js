@@ -221,20 +221,26 @@ function GamePlay() {
             [0,3,6],[1,4,7],[2,5,8],
             [0,4,8],[2,4,6]
         ];
+        let theWinner = false;
         for (let i = 0; i < winningPattern.length; i++) {
             console.log("check",i,":",board[winningPattern[i][0]],board[winningPattern[i][1]],board[winningPattern[i][2]]);
             if(board[winningPattern[i][0]] === "X" && board[winningPattern[i][1]] === "X" && board[winningPattern[i][2]] === "X"){
                 setWinner("X")
+                theWinner = true;
                 console.log("X win");
                 break;
             }
             else if(board[winningPattern[i][0]] === "O" && board[winningPattern[i][1]] === "O" && board[winningPattern[i][2]] === "O"){
                 setWinner("O")
+                theWinner = true
                 console.log("O win");
                 break;
             }
         }
-        console.log("checkwin result:", winner);
+        console.log("checkwin result:", theWinner);
+        if(!theWinner){
+            checkTie()
+        }
     }
     function checkTie(){
         console.log("checking tie...");
