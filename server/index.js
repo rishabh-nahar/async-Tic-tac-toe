@@ -117,7 +117,7 @@ app.get('/api/findGames',async (req,res)=>{
           try {
                const game = await Game.find({
                     $or: [{ playerX :  req.query.userID }, {playerO :  req.query.userID }],   
-               })
+               }).sort({_id: -1})
                console.log("Given data in findgames",req.query);
                console.log("game found:",game);
 

@@ -6,17 +6,24 @@
     display: flex;
     flex-direction: column;
 }
-.your-game-text{
+.your-game-text-container{
     font-size: 28px;
+    z-index: 100;
+    position: relative;
+    left: 0;
+    top: 0;
+    width: 100%;
+}
+.your-game-text{
     background-color: white;
-    padding: 0 0 24px 0;
+    padding: 10px 0 0 0 ;
 }
 .all-games-container{
     display: flex;
     height: 100%;
     flex-direction: column;
-    justify-content: center;
     gap: 16px;
+    padding: 24px 0;
 }
 .all-games-container .games .no-game-found{
     padding: 24px 0;

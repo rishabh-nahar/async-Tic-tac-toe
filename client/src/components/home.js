@@ -77,8 +77,8 @@ function Home() {
         <>  
             <div className='home-body-wrapper'>
                 <div className='home-body-container'>
-                    <div className='your-game-text weight-bold'>
-                        Your Games
+                    <div className='your-game-text-container weight-bold'>
+                        <div className='your-game-text'>Your Games</div>
                     </div>
                     <div className='all-games-container'>
                         {(games?

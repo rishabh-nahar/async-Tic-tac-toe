@@ -38,10 +38,6 @@ function GamePlay() {
     useEffect(()=>{
         let getGameDetilsTimeInterval;
         console.log("check win");
-        checkWin()
-        if(winner === null){
-            checkTie()
-        }
         if(piece !== player){
             getGameDetilsTimeInterval = setInterval(()=>{
                     getGameDetails()
@@ -101,9 +97,7 @@ function GamePlay() {
         if(piece === player){
             checkWin()
             console.log("Winner:",winner);
-            if(winner === null){
-                checkTie()
-            }
+
             console.log(`clicked on board with index ${index}`);
             if(boardTwo[index] === "" || boardTwo[index] === null){
                 let newBoard = []
