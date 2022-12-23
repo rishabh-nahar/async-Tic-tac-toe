@@ -1,13 +1,13 @@
 
 # Getting Started AsyncTiCTacToe
 
-### 'Tech stack used in game:'
+### Tech stack used in game:
     MongoDB
     ExpressJS
     ReactJS
     NodeJs
 
-To run code:\
+### To run code:\
     1. Clone the repository\
     2. Open client and server in any terminal\
     3. Type npm install and enter\
@@ -15,6 +15,6 @@ To run code:\
     5. Write 'npm start' for server as well as client
 
 
-Deployed on vercel: https://async-tic-tac-toe-ub48.vercel.app/
+### Deployed on vercel: https://async-tic-tac-toe-ub48.vercel.app/
 
 - This can only run on mobile.\
